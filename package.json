@@ -1,0 +1,46 @@
+{
+  "name": "multipage-skeleton",
+  "description": "A tool to automatically generate skeleton screen code.",
+  "version": "1.1.1",
+  "license": "MIT",
+  "main": "src/index.js",
+  "author": "lucifer_zl",
+  "keywords": [
+    "multipage skeleton",
+    "skeleton",
+    "skeleton screen",
+    "loading",
+    "puppeteer",
+    "page skeleton",
+    "dps"
+  ],
+  "preferGlobal": true,
+  "bin": {
+    "skeleton": "./bin/skeleton-cli.js"
+  },
+  "scripts": {
+    "build": "npx tsc --build -w tsconfig.json",
+    "test": "node ./examples/index",
+    "test2": "node ./bin/skeleton-cli.js start"
+  },
+  "dependencies": {
+    "chalk": "^4.1.0",
+    "cheerio": "^1.0.0-rc.3",
+    "commander": "^6.0.0",
+    "node-emoji": "^1.10.0",
+    "ora": "^4.0.4",
+    "puppeteer": "^5.2.1"
+  },
+  "devDependencies": {
+    "@types/cheerio": "^0.22.21",
+    "@types/node-emoji": "^1.8.1",
+    "@types/puppeteer": "^3.0.1",
+    "@typescript-eslint/eslint-plugin": "^3.7.0",
+    "@typescript-eslint/parser": "^3.7.0",
+    "eslint": "^7.5.0",
+    "eslint-config-prettier": "^6.11.0",
+    "eslint-plugin-prettier": "^3.1.4",
+    "prettier": "^2.0.5",
+    "typescript": "^3.9.7"
+  }
+}
