@@ -51,7 +51,7 @@ var Skeleton = /** @class */ (function () {
     function Skeleton(_a) {
         var _b = _a === void 0 ? {} : _a, url = _b.url, output = _b.output, background = _b.background, _c = _b.animation, animation = _c === void 0 ? "" : _c, _d = _b.rootNode, rootNode = _d === void 0 ? "" : _d, _e = _b.header, header = _e === void 0 ? "" : _e, _f = _b.device, device = _f === void 0 ? "iPhone 6" : _f, _g = _b.destroy, destroy = _g === void 0 ? "" : _g, _h = _b.mediaQuery, mediaQuery = _h === void 0 ? "" : _h, headless = _b.headless, extraHTTPHeaders = _b.extraHTTPHeaders, writePageStructure = _b.writePageStructure, includeElement = _b.includeElement, init = _b.init;
         var filepath = !(output === null || output === void 0 ? void 0 : output.filepath) || path_1.default.isAbsolute(output === null || output === void 0 ? void 0 : output.filepath)
-            ? output === null || output === void 0 ? void 0 : output.filepath : path_1.default.join(path_1.default.dirname(fs_1.default.realpathSync(__filename)), "../", output === null || output === void 0 ? void 0 : output.filepath);
+            ? output === null || output === void 0 ? void 0 : output.filepath : path_1.default.join(currDir, output === null || output === void 0 ? void 0 : output.filepath);
         this.url = url;
         this.filepath = filepath || "";
         this.injectSelector = (output === null || output === void 0 ? void 0 : output.injectSelector) || 'body';
@@ -76,7 +76,6 @@ var Skeleton = /** @class */ (function () {
             utils_1.log.error("[header] should be an object !", 1);
         }
         if (filepath) {
-            console.log('filepath: ', filepath);
             if (!fs_1.default.existsSync(filepath)) {
                 utils_1.log.error('[output.filepath:404] please provide the output filepath !', 1);
             }

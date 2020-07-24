@@ -1,7 +1,7 @@
 {
   "name": "multipage-skeleton",
   "description": "A tool to automatically generate skeleton screen code.",
-  "version": "1.1.1",
+  "version": "1.2.0",
   "license": "MIT",
   "main": "src/index.js",
   "author": "lucifer_zl",
@@ -17,6 +17,10 @@
   "preferGlobal": true,
   "bin": {
     "skeleton": "./bin/skeleton-cli.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:Jurool/multipage-skeleton.git"
   },
   "scripts": {
     "build": "npx tsc --build -w tsconfig.json",

@@ -51,11 +51,8 @@ class Skeleton {
     let filepath =
       !output?.filepath || path.isAbsolute(output?.filepath)
         ? output?.filepath
-        : path.join(
-            path.dirname(fs.realpathSync(__filename)),
-            `../`,
-            output?.filepath
-          )
+        : path.join(currDir, output?.filepath)
+
     this.url = url
     this.filepath = filepath || ``
     this.injectSelector = output?.injectSelector || 'body'
@@ -83,7 +80,6 @@ class Skeleton {
     }
 
     if (filepath) {
-      console.log('filepath: ', filepath)
       if (!fs.existsSync(filepath)) {
         log.error(
           '[output.filepath:404] please provide the output filepath !',
