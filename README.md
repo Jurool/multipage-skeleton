@@ -6,10 +6,14 @@ base on [dps](https://github.com/famanoder/dps)
 
 ### install
 
-```js
+```
 yarn add multipage-skeleton -D
 // or
 npm i multipage-skeleton -D
+```
+
+```
+npx skeleton start
 ```
 
 ### via skeleton.config.js
