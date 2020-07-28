@@ -1,7 +1,7 @@
 {
   "name": "multipage-skeleton",
   "description": "A tool to automatically generate skeleton screen code.",
-  "version": "1.2.0",
+  "version": "1.2.2",
   "license": "MIT",
   "main": "src/index.js",
   "author": "lucifer_zl",

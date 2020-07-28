@@ -11,19 +11,22 @@ import cheerio from 'cheerio'
 import ppteer from './ppteer'
 import defaultHtml from './default.html'
 
-const currDir = process.cwd()
+const currentDirectory = process.cwd()
 
 class Skeleton {
   url: SkeletonConfig['url']
   filepath: string
   injectSelector: string
   background: SkeletonConfig['background']
+  skeletonColor: SkeletonConfig['skeletonColor']
   animation: SkeletonConfig['animation']
   rootNode: SkeletonConfig['rootNode']
   header: SkeletonConfig['header']
   device: SkeletonConfig['device']
   destroy: SkeletonConfig['destroy']
   mediaQuery: SkeletonConfig['mediaQuery']
+  userAgent: SkeletonConfig['userAgent']
+  viewport: SkeletonConfig['viewport']
   headless: SkeletonConfig['headless']
   extraHTTPHeaders: SkeletonConfig['extraHTTPHeaders']
   writePageStructure: SkeletonConfig['writePageStructure']
@@ -34,13 +37,16 @@ class Skeleton {
     {
       url,
       output,
-      background,
+      background = `#ecf0f2`,
+      skeletonColor = `#eee`,
       animation = ``,
       rootNode = ``,
       header = ``,
       device = `iPhone 6`,
       destroy = ``,
       mediaQuery = ``,
+      userAgent = ``,
+      viewport = ``,
       headless,
       extraHTTPHeaders,
       writePageStructure,
@@ -51,18 +57,21 @@ class Skeleton {
     let filepath =
       !output?.filepath || path.isAbsolute(output?.filepath)
         ? output?.filepath
-        : path.join(currDir, output?.filepath)
+        : path.join(currentDirectory, output?.filepath)
 
     this.url = url
     this.filepath = filepath || ``
     this.injectSelector = output?.injectSelector || 'body'
-    this.background = background || '#ecf0f2'
+    this.background = background
+    this.skeletonColor = skeletonColor
     this.animation = animation
     this.rootNode = rootNode
     this.header = header
     this.device = device
     this.destroy = destroy
     this.mediaQuery = mediaQuery
+    this.userAgent = userAgent
+    this.viewport = viewport
     this.headless = headless
     this.extraHTTPHeaders = extraHTTPHeaders
     this.writePageStructure = writePageStructure
@@ -100,53 +109,74 @@ class Skeleton {
     let html = ``
 
     try {
+      const {
+        init,
+        includeElement,
+        background,
+        skeletonColor,
+        animation,
+        rootNode,
+        header,
+        injectSelector,
+        mediaQuery,
+        device,
+        destroy,
+      } = this
+
       const args = parseParams.create({
         init: {
           type: 'function',
-          value: this.init?.toString(),
+          value: init?.toString(),
         },
         includeElement: {
           type: 'function',
-          value: this.includeElement?.toString(),
+          value: includeElement?.toString(),
         },
         background: {
           type: 'string',
-          value: this.background,
+          value: background,
+        },
+        skeletonColor: {
+          type: 'string',
+          value: skeletonColor,
         },
         animation: {
           type: 'string',
-          value: this.animation,
+          value: animation,
         },
         rootNode: {
           type: 'string',
-          value: this.rootNode,
+          value: rootNode,
         },
         header: {
           type: 'object',
-          value: JSON.stringify(this.header),
+          value: JSON.stringify(header),
         },
-        selector: {
+        injectSelector: {
           type: `string`,
-          value: this.injectSelector,
+          value: injectSelector,
         },
         mediaQuery: {
           type: 'string',
-          value: this.mediaQuery,
+          value: mediaQuery,
         },
         device: {
           type: 'string',
-          value: this.device,
+          value: device,
         },
         destroy: {
           type: 'string',
-          value: this.destroy,
+          value: destroy,
         },
       })
 
       args?.unshift((evalScripts as unknown) as string)
 
       const { html: _html } = await page.evaluate(
-        ...(args as [EvaluateFn<unknown>, ...SerializableOrJSHandle[]])
+        ...(args as [
+          EvaluateFn<typeof evalScripts>,
+          ...SerializableOrJSHandle[]
+        ])
       )
 
       html = _html
@@ -183,14 +213,23 @@ class Skeleton {
   }
 
   async start(): Promise<string> {
-    const { filepath, url: pageUrl } = this
+    const {
+      filepath,
+      url: pageUrl,
+      device,
+      headless,
+      userAgent,
+      viewport,
+    } = this
     const spinner = Spinner(`magentaBright`)
 
     spinner.text = `启动浏览器...`
 
     const browser = await ppteer({
-      device: this.device || ``,
-      headless: this.headless,
+      device,
+      headless,
+      userAgent,
+      viewport,
     })
 
     spinner.text = `正在打开页面：${pageUrl}...`
@@ -205,7 +244,7 @@ class Skeleton {
     filepath && this.writeToFilepath(filepath, html)
 
     if (!userWrite && !filepath) {
-      const defaultPage = path.join(currDir, `index.html`)
+      const defaultPage = path.join(currentDirectory, `index.html`)
 
       fs.writeFileSync(defaultPage, defaultHtml)
       this.writeToFilepath(defaultPage, html)

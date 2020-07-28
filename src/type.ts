@@ -1,3 +1,5 @@
+import { Viewport } from 'puppeteer'
+
 export interface SkeletonConfig {
   /** URL address that can be accessed */
   url: string
@@ -26,8 +28,19 @@ export interface SkeletonConfig {
       }
     | ``
 
-  /** background color */
+  /**
+   * background color
+   * @default
+   * default: #ecf0f2
+   */
   background?: string
+
+  /**
+   * skeleton color
+   * @default
+   * default: #eee
+   */
+  skeletonColor?: string
 
   /** animation */
   animation?: string
@@ -53,11 +66,23 @@ export interface SkeletonConfig {
   /** Custom write method */
   writePageStructure?: (html: string, filepath: string) => unknown
 
-  /** The method of destroying the skeleton screen code, which will be injected into the window */
+  /** The name of the method to destroy the skeleton screen code that will be injected into the window */
   destroy?: string | ``
 
   /** media query */
   mediaQuery?: string
+
+  /**
+   * userAgent.
+   * `userAgent and viewport must be provided together`
+   */
+  userAgent?: string
+
+  /**
+   * viewport
+   * `viewport and userAgent must be provided together`
+   */
+  viewport?: Viewport | ``
 }
 
 export interface ClassProps {

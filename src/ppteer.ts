@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import { Devices } from './type'
+import { Devices, SkeletonConfig } from './type'
 import puppeteer from 'puppeteer'
 
 const { devices } = puppeteer
@@ -27,7 +27,14 @@ export default async (
   {
     device,
     headless = true,
-  }: { device: string | keyof typeof _devices_; headless?: boolean } = {} as {
+    userAgent,
+    viewport,
+  }: {
+    device: SkeletonConfig['device']
+    headless?: boolean
+    userAgent?: string
+    viewport?: SkeletonConfig['viewport']
+  } = {} as {
     device: string
     headless: boolean
   }
@@ -38,15 +45,19 @@ export default async (
 
   async function openPage(url: string, extraHTTPHeaders?: string) {
     const page = await browser.newPage()
-    const _device = devices?.[device]
 
     try {
-      if (_device) {
-        await page.emulate(_device)
-      } else {
+      const defaultDevices = [`mobile`, `ipad`, `pc`]
+      if (userAgent && viewport) {
+        page.setUserAgent(userAgent)
+        page.setViewport(viewport)
+      } else if (defaultDevices.includes(device as string)) {
         const deviceSet = _devices_[device as keyof Devices]
         page.setUserAgent(deviceSet[2])
         page.setViewport({ width: deviceSet[0], height: deviceSet[1] })
+      } else if (typeof device === `string`) {
+        const _device = devices[device]
+        await page.emulate(_device)
       }
 
       if (extraHTTPHeaders && getType(extraHTTPHeaders) === `object`) {

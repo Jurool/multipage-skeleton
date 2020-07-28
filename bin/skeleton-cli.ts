@@ -13,9 +13,7 @@ program.version(version, `-v, --version`, `latest version`)
 program
   .command('start')
   .description('start create a skeleton screen')
-  .action(function () {
-    skeleton(require(getConfigFile()))
-  })
+  .action(() => skeleton(require(getConfigFile())))
 
 program.parse(process.argv)
 

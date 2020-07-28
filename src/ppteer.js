@@ -60,49 +60,56 @@ var _devices_ = {
     ],
 };
 exports.default = (function (_a) {
-    var _b = _a === void 0 ? {} : _a, device = _b.device, _c = _b.headless, headless = _c === void 0 ? true : _c;
+    var _b = _a === void 0 ? {} : _a, device = _b.device, _c = _b.headless, headless = _c === void 0 ? true : _c, userAgent = _b.userAgent, viewport = _b.viewport;
     return __awaiter(void 0, void 0, void 0, function () {
         function openPage(url, extraHTTPHeaders) {
             return __awaiter(this, void 0, void 0, function () {
-                var page, _device, deviceSet, e_1;
+                var page, defaultDevices, deviceSet, _device, e_1;
                 return __generator(this, function (_a) {
                     switch (_a.label) {
                         case 0: return [4 /*yield*/, browser.newPage()];
                         case 1:
                             page = _a.sent();
-                            _device = devices === null || devices === void 0 ? void 0 : devices[device];
                             _a.label = 2;
                         case 2:
-                            _a.trys.push([2, 9, , 10]);
-                            if (!_device) return [3 /*break*/, 4];
-                            return [4 /*yield*/, page.emulate(_device)];
+                            _a.trys.push([2, 10, , 11]);
+                            defaultDevices = ["mobile", "ipad", "pc"];
+                            if (!(userAgent && viewport)) return [3 /*break*/, 3];
+                            page.setUserAgent(userAgent);
+                            page.setViewport(viewport);
+                            return [3 /*break*/, 6];
                         case 3:
-                            _a.sent();
-                            return [3 /*break*/, 5];
-                        case 4:
+                            if (!defaultDevices.includes(device)) return [3 /*break*/, 4];
                             deviceSet = _devices_[device];
                             page.setUserAgent(deviceSet[2]);
                             page.setViewport({ width: deviceSet[0], height: deviceSet[1] });
-                            _a.label = 5;
+                            return [3 /*break*/, 6];
+                        case 4:
+                            if (!(typeof device === "string")) return [3 /*break*/, 6];
+                            _device = devices[device];
+                            return [4 /*yield*/, page.emulate(_device)];
                         case 5:
-                            if (!(extraHTTPHeaders && utils_1.getType(extraHTTPHeaders) === "object")) return [3 /*break*/, 7];
-                            return [4 /*yield*/, page.setExtraHTTPHeaders(new Map(Object.entries(extraHTTPHeaders)))];
-                        case 6:
                             _a.sent();
-                            _a.label = 7;
-                        case 7: return [4 /*yield*/, page.goto(url, {
+                            _a.label = 6;
+                        case 6:
+                            if (!(extraHTTPHeaders && utils_1.getType(extraHTTPHeaders) === "object")) return [3 /*break*/, 8];
+                            return [4 /*yield*/, page.setExtraHTTPHeaders(new Map(Object.entries(extraHTTPHeaders)))];
+                        case 7:
+                            _a.sent();
+                            _a.label = 8;
+                        case 8: return [4 /*yield*/, page.goto(url, {
                                 timeout: 2 * 60 * 1000,
                                 waitUntil: "networkidle0",
                             })];
-                        case 8:
-                            _a.sent();
-                            return [3 /*break*/, 10];
                         case 9:
+                            _a.sent();
+                            return [3 /*break*/, 11];
+                        case 10:
                             e_1 = _a.sent();
                             console.log("\n", "error: ");
                             utils_1.log.error(e_1.message);
-                            return [3 /*break*/, 10];
-                        case 10: return [2 /*return*/, page];
+                            return [3 /*break*/, 11];
+                        case 11: return [2 /*return*/, page];
                     }
                 });
             });

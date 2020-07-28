@@ -2,17 +2,21 @@
 /* eslint-disable @typescript-eslint/ban-types */
 import { ClassProps, Attr } from './type'
 
-export default function evalDOM(...params: unknown[]): Promise<unknown> {
+export default function evalDOM(
+  ...params: unknown[]
+): Promise<{
+  html: string
+  params?: any
+  args?: object
+  blocks?: string[]
+}> {
   function kebabCase(str: string) {
     const hyphenateRE = /([^-])([A-Z])/g
-    return str
-      .replace(hyphenateRE, '$1-$2')
-      .replace(hyphenateRE, '$1-$2')
-      .toLowerCase()
+    return str.replace(hyphenateRE, '$1-$2').toLowerCase()
   }
 
-  const MOBILE = [`_mobile_`, `__mobile__`]
-  const DESKTOP = [`_pc_`, `__pc__`]
+  const random = () => Math.random().toString(16).slice(2)
+
   const ELEMENTS = [
     'audio',
     'button',
@@ -37,12 +41,12 @@ export default function evalDOM(...params: unknown[]): Promise<unknown> {
     args = parseParams(args)
   }
 
-  const [_, __] = args.device === `pc` ? DESKTOP : MOBILE
+  const [_, __] = [`skeleton-${random()}`, `skeleton-${random()}`]
 
   const classProps: ClassProps = {
     position: 'fixed',
     zIndex: `999`,
-    background: args.background,
+    background: args.skeletonColor,
   }
   if (args.animation) {
     classProps.animation = args.animation
@@ -56,7 +60,7 @@ export default function evalDOM(...params: unknown[]): Promise<unknown> {
     top,
     left,
     zIndex = `999`,
-    background = args.background,
+    background = args.skeletonColor,
     radius,
     subClass,
   }: Attr = {}) {
@@ -77,9 +81,7 @@ export default function evalDOM(...params: unknown[]): Promise<unknown> {
     radius && radius !== '0px' && styles.push(`border-radius: ${radius}`)
 
     blocks.push(
-      `<div class="${_} ${subClass ? `${__}` : ''}" style="${styles.join(
-        ';'
-      )}"></div>`
+      `<div ${_} ${subClass ? `${__}` : ''} style="${styles.join(';')}"></div>`
     )
   }
 
@@ -161,8 +163,14 @@ export default function evalDOM(...params: unknown[]): Promise<unknown> {
   }
 
   function createCommonClass(props: ClassProps) {
-    const scriptId = `SkeletonScirpt-${Math.random().toString(16).slice(2)}`
-    const inlineStyle = [`<style> ${args.mediaQuery} { .${_} {`]
+    const scriptId = `SkeletonScirpt-${random()}`
+    const inlineStyle = [`<style> ${args.mediaQuery} { [${_}] {`]
+    const {
+      mediaQuery,
+      injectSelector,
+      destroy: destroyFunctionName,
+      background,
+    } = args
 
     Object.entries(props).reduce((arr, [key, value]) => {
       arr.push(`${kebabCase(key) as any}: ${value};\n`)
@@ -177,7 +185,7 @@ export default function evalDOM(...params: unknown[]): Promise<unknown> {
           .remove();
       }`
     inlineStyle.push(`}}
-      ${args.mediaQuery} { .${__} {
+      ${mediaQuery} { [${__}] {
         top: 0%;
         left: 0%;
         width: 100%;
@@ -193,16 +201,16 @@ export default function evalDOM(...params: unknown[]): Promise<unknown> {
         }
       }
       ${
-        args.selector
-          ? `${args.mediaQuery} {
-        ${args.selector} {
+        injectSelector
+          ? `${mediaQuery} {
+        ${injectSelector} {
           position: fixed;
           top: 0;
           right: 0;
           bottom: 0;
           left: 0;
           z-index: 1000;
-          background: #fff;
+          background: ${background};
         }
       }`
           : ``
@@ -215,8 +223,8 @@ export default function evalDOM(...params: unknown[]): Promise<unknown> {
      */
 
     ${
-      args.destroy
-        ? `window.${args.destroy} = ${destroy}`
+      destroyFunctionName
+        ? `window.${destroyFunctionName} = ${destroy}`
         : `window.addEventListener('DOMContentLoaded', ${destroy})`
     }
     </script>`)
@@ -282,7 +290,7 @@ export default function evalDOM(...params: unknown[]): Promise<unknown> {
       drawBlock({
         height: 100,
         zIndex: `990`,
-        background: `#fff`,
+        background: args.background,
         subClass: true,
       })
 
@@ -313,11 +321,12 @@ export default function evalDOM(...params: unknown[]): Promise<unknown> {
           drawBlock({
             height: getPercentage(parseInt(height), innerHeight),
             zIndex: `999`,
-            background: background || args.background,
+            background: background || args.skeletonColor,
             subClass: true,
           })
       }
     }
+
     showBlocks() {
       if (blocks.length) {
         const { body } = document
@@ -329,7 +338,9 @@ export default function evalDOM(...params: unknown[]): Promise<unknown> {
         window.scrollTo(0, this.originStyle.scrollTop)
         document.body.style.overflow = this.originStyle.bodyOverflow
 
-        return blocksHTML
+        this.filterOverlap()
+
+        return div.innerHTML
       }
     }
 
@@ -408,10 +419,7 @@ export default function evalDOM(...params: unknown[]): Promise<unknown> {
                   ),
                   top: getPercentage(top + paddingTop, innerHeight),
                   left: getPercentage(left + paddingLeft, innerWidth),
-                  radius: getCSSProperty(
-                    node,
-                    kebabCase('border-radius') as keyof CSSStyleDeclaration
-                  ) as string,
+                  radius: getCSSProperty(node, 'borderRadius') as string,
                 })
               }
             } else if (childNodes && childNodes.length) {
@@ -426,6 +434,36 @@ export default function evalDOM(...params: unknown[]): Promise<unknown> {
 
       return this.showBlocks()
     }
+
+    /**
+     * 过滤重叠部分
+     */
+    filterOverlap() {
+      const $$ = (selector: string) =>
+        Array.from(document.querySelectorAll(selector))
+
+      const arr = $$(`[${_}]`)
+        .slice(1)
+        .map((elem) => {
+          const { top, right, bottom, left } = elem.getBoundingClientRect()
+          return { top, right, bottom, left, elem }
+        })
+      const _arr: typeof arr = []
+      arr.forEach(({ top, right, bottom, left }) => {
+        const __arr = arr
+          .slice()
+          .filter(
+            ({ top: _top, right: _right, bottom: _bottom, left: _left }) => {
+              return (
+                top < _top && right > _right && bottom > _bottom && left < _left
+              )
+            }
+          )
+        __arr.length && _arr.push(...__arr)
+      })
+
+      _arr.forEach(({ elem }) => elem.remove())
+    }
   }
 
   return new Promise((resolve, reject) =>
@@ -437,9 +475,9 @@ export default function evalDOM(...params: unknown[]): Promise<unknown> {
           init,
           rootNode,
           includeElement,
-        }).startDraw()
+        }).startDraw() as string
 
-        resolve({ html, args, params })
+        resolve({ html, args, params, blocks })
       } catch (e) {
         reject(e)
       }

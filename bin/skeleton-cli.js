@@ -14,9 +14,7 @@ commander_1.default.version(version, "-v, --version", "latest version");
 commander_1.default
     .command('start')
     .description('start create a skeleton screen')
-    .action(function () {
-    src_1.default(require(getConfigFile()));
-});
+    .action(function () { return src_1.default(require(getConfigFile())); });
 commander_1.default.parse(process.argv);
 function getConfigFile() {
     return path_1.default.resolve(currentDirectory, "./skeleton.config.js");

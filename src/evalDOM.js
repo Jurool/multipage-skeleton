@@ -7,13 +7,9 @@ function evalDOM() {
     }
     function kebabCase(str) {
         var hyphenateRE = /([^-])([A-Z])/g;
-        return str
-            .replace(hyphenateRE, '$1-$2')
-            .replace(hyphenateRE, '$1-$2')
-            .toLowerCase();
+        return str.replace(hyphenateRE, '$1-$2').toLowerCase();
     }
-    var MOBILE = ["_mobile_", "__mobile__"];
-    var DESKTOP = ["_pc_", "__pc__"];
+    var random = function () { return Math.random().toString(16).slice(2); };
     var ELEMENTS = [
         'audio',
         'button',
@@ -36,18 +32,18 @@ function evalDOM() {
     if (args.length !== 1 || getType(firstElem) !== 'object') {
         args = parseParams(args);
     }
-    var _a = args.device === "pc" ? DESKTOP : MOBILE, _ = _a[0], __ = _a[1];
+    var _a = ["skeleton-" + random(), "skeleton-" + random()], _ = _a[0], __ = _a[1];
     var classProps = {
         position: 'fixed',
         zIndex: "999",
-        background: args.background,
+        background: args.skeletonColor,
     };
     if (args.animation) {
         classProps.animation = args.animation;
     }
     createCommonClass(classProps);
     function drawBlock(_a) {
-        var _b = _a === void 0 ? {} : _a, width = _b.width, height = _b.height, top = _b.top, left = _b.left, _c = _b.zIndex, zIndex = _c === void 0 ? "999" : _c, _d = _b.background, background = _d === void 0 ? args.background : _d, radius = _b.radius, subClass = _b.subClass;
+        var _b = _a === void 0 ? {} : _a, width = _b.width, height = _b.height, top = _b.top, left = _b.left, _c = _b.zIndex, zIndex = _c === void 0 ? "999" : _c, _d = _b.background, background = _d === void 0 ? args.skeletonColor : _d, radius = _b.radius, subClass = _b.subClass;
         var styles = ["height: " + height + "%"];
         if (!subClass) {
             styles.push("top: " + top + "%", "left: " + left + "%", "width: " + width + "%");
@@ -59,7 +55,7 @@ function evalDOM() {
             styles.push("background: " + background);
         }
         radius && radius !== '0px' && styles.push("border-radius: " + radius);
-        blocks.push("<div class=\"" + _ + " " + (subClass ? "" + __ : '') + "\" style=\"" + styles.join(';') + "\"></div>");
+        blocks.push("<div " + _ + " " + (subClass ? "" + __ : '') + " style=\"" + styles.join(';') + "\"></div>");
     }
     function getPercentage(molecular, denominator) {
         return parseFloat(String((molecular / denominator) * 100)).toFixed(3);
@@ -118,18 +114,19 @@ function evalDOM() {
         };
     }
     function createCommonClass(props) {
-        var scriptId = "SkeletonScirpt-" + Math.random().toString(16).slice(2);
-        var inlineStyle = ["<style> " + args.mediaQuery + " { ." + _ + " {"];
+        var scriptId = "SkeletonScirpt-" + random();
+        var inlineStyle = ["<style> " + args.mediaQuery + " { [" + _ + "] {"];
+        var mediaQuery = args.mediaQuery, injectSelector = args.injectSelector, destroyFunctionName = args.destroy, background = args.background;
         Object.entries(props).reduce(function (arr, _a) {
             var key = _a[0], value = _a[1];
             arr.push(kebabCase(key) + ": " + value + ";\n");
             return arr;
         }, inlineStyle);
         var destroy = "function () {\n        document\n          .querySelector('#" + scriptId + "')\n          .parentElement\n          .remove();\n      }";
-        inlineStyle.push("}}\n      " + args.mediaQuery + " { ." + __ + " {\n        top: 0%;\n        left: 0%;\n        width: 100%;\n      } }\n\n      @keyframes opacity {\n        0% {\n          opacity: 1;\n        } 50% {\n          opacity: .5;\n        } 100% {\n          opacity: 1;\n        }\n      }\n      " + (args.selector
-            ? args.mediaQuery + " {\n        " + args.selector + " {\n          position: fixed;\n          top: 0;\n          right: 0;\n          bottom: 0;\n          left: 0;\n          z-index: 1000;\n          background: #fff;\n        }\n      }"
-            : "") + "\n    </style>\n    <script id='" + scriptId + "'>\n    /**\n     * \u9ED8\u8BA4\u4E8EDOMContentLoaded\u4E8B\u4EF6\u4E2D\u79FB\u9664\u9AA8\u67B6\u5C4F\u76F8\u5173\u4EE3\u7801,\n     * \u5982\u679C\u63D0\u4F9B\u4E86destroy\u53C2\u6570\uFF0C\u5219\u5C06\u4EE5destroy\u547D\u540D\u7684\u51FD\u6570\u6CE8\u5165\u5230window\u4E2D\uFF0C\u4F9B\u7528\u6237\u81EA\u884C\u79FB\u9664\n     */\n\n    " + (args.destroy
-            ? "window." + args.destroy + " = " + destroy
+        inlineStyle.push("}}\n      " + mediaQuery + " { [" + __ + "] {\n        top: 0%;\n        left: 0%;\n        width: 100%;\n      } }\n\n      @keyframes opacity {\n        0% {\n          opacity: 1;\n        } 50% {\n          opacity: .5;\n        } 100% {\n          opacity: 1;\n        }\n      }\n      " + (injectSelector
+            ? mediaQuery + " {\n        " + injectSelector + " {\n          position: fixed;\n          top: 0;\n          right: 0;\n          bottom: 0;\n          left: 0;\n          z-index: 1000;\n          background: " + background + ";\n        }\n      }"
+            : "") + "\n    </style>\n    <script id='" + scriptId + "'>\n    /**\n     * \u9ED8\u8BA4\u4E8EDOMContentLoaded\u4E8B\u4EF6\u4E2D\u79FB\u9664\u9AA8\u67B6\u5C4F\u76F8\u5173\u4EE3\u7801,\n     * \u5982\u679C\u63D0\u4F9B\u4E86destroy\u53C2\u6570\uFF0C\u5219\u5C06\u4EE5destroy\u547D\u540D\u7684\u51FD\u6570\u6CE8\u5165\u5230window\u4E2D\uFF0C\u4F9B\u7528\u6237\u81EA\u884C\u79FB\u9664\n     */\n\n    " + (destroyFunctionName
+            ? "window." + destroyFunctionName + " = " + destroy
             : "window.addEventListener('DOMContentLoaded', " + destroy + ")") + "\n    </script>");
         blocks.push(inlineStyle.join("").replace(/\n/g, ""));
     }
@@ -171,7 +168,7 @@ function evalDOM() {
             drawBlock({
                 height: 100,
                 zIndex: "990",
-                background: "#fff",
+                background: args.background,
                 subClass: true,
             });
             withHeader();
@@ -194,7 +191,7 @@ function evalDOM() {
                     drawBlock({
                         height: getPercentage(parseInt(height), innerHeight),
                         zIndex: "999",
-                        background: background || args.background,
+                        background: background || args.skeletonColor,
                         subClass: true,
                     });
             }
@@ -208,7 +205,8 @@ function evalDOM() {
                 body.appendChild(div);
                 window.scrollTo(0, this.originStyle.scrollTop);
                 document.body.style.overflow = this.originStyle.bodyOverflow;
-                return blocksHTML;
+                this.filterOverlap();
+                return div.innerHTML;
             }
         };
         DrawPageframe.prototype.startDraw = function () {
@@ -258,7 +256,7 @@ function evalDOM() {
                                     height: getPercentage(height - paddingTop - paddingBottom, innerHeight),
                                     top: getPercentage(top_2 + paddingTop, innerHeight),
                                     left: getPercentage(left + paddingLeft, innerWidth),
-                                    radius: getCSSProperty(node, kebabCase('border-radius')),
+                                    radius: getCSSProperty(node, 'borderRadius'),
                                 });
                             }
                         }
@@ -272,6 +270,35 @@ function evalDOM() {
             deepFindNode(nodes);
             return this.showBlocks();
         };
+        /**
+         * 过滤重叠部分
+         */
+        DrawPageframe.prototype.filterOverlap = function () {
+            var $$ = function (selector) {
+                return Array.from(document.querySelectorAll(selector));
+            };
+            var arr = $$("[" + _ + "]")
+                .slice(1)
+                .map(function (elem) {
+                var _a = elem.getBoundingClientRect(), top = _a.top, right = _a.right, bottom = _a.bottom, left = _a.left;
+                return { top: top, right: right, bottom: bottom, left: left, elem: elem };
+            });
+            var _arr = [];
+            arr.forEach(function (_a) {
+                var top = _a.top, right = _a.right, bottom = _a.bottom, left = _a.left;
+                var __arr = arr
+                    .slice()
+                    .filter(function (_a) {
+                    var _top = _a.top, _right = _a.right, _bottom = _a.bottom, _left = _a.left;
+                    return (top < _top && right > _right && bottom > _bottom && left < _left);
+                });
+                __arr.length && _arr.push.apply(_arr, __arr);
+            });
+            _arr.forEach(function (_a) {
+                var elem = _a.elem;
+                return elem.remove();
+            });
+        };
         return DrawPageframe;
     }());
     return new Promise(function (resolve, reject) {
@@ -283,7 +310,7 @@ function evalDOM() {
                     rootNode: rootNode,
                     includeElement: includeElement_1,
                 }).startDraw();
-                resolve({ html: html, args: args, params: params });
+                resolve({ html: html, args: args, params: params, blocks: blocks });
             }
             catch (e) {
                 reject(e);
