@@ -23,19 +23,22 @@ function evalDOM() {
         'video',
         'xmp',
     ];
+    //** Used to save the skeleton screen code */
     var blocks = [];
     var innerWidth = window.innerWidth, innerHeight = window.innerHeight;
     var args = params;
     if (!args.length)
         args = [{}];
     var firstElem = args[0];
+    // parse arguments
     if (args.length !== 1 || getType(firstElem) !== 'object') {
         args = parseParams(args);
     }
+    // Skeleton screen DOM attributes
     var _a = ["skeleton-" + random(), "skeleton-" + random()], _ = _a[0], __ = _a[1];
     var classProps = {
         position: 'fixed',
-        zIndex: "999",
+        zIndex: args.zIndex,
         background: args.skeletonColor,
     };
     if (args.animation) {
@@ -43,7 +46,7 @@ function evalDOM() {
     }
     createCommonClass(classProps);
     function drawBlock(_a) {
-        var _b = _a === void 0 ? {} : _a, width = _b.width, height = _b.height, top = _b.top, left = _b.left, _c = _b.zIndex, zIndex = _c === void 0 ? "999" : _c, _d = _b.background, background = _d === void 0 ? args.skeletonColor : _d, radius = _b.radius, subClass = _b.subClass;
+        var _b = _a === void 0 ? {} : _a, width = _b.width, height = _b.height, top = _b.top, left = _b.left, _c = _b.zIndex, zIndex = _c === void 0 ? String(+args.zIndex + 2) : _c, _d = _b.background, background = _d === void 0 ? args.skeletonColor : _d, radius = _b.radius, subClass = _b.subClass;
         var styles = ["height: " + height + "%"];
         if (!subClass) {
             styles.push("top: " + top + "%", "left: " + left + "%", "width: " + width + "%");
@@ -124,7 +127,7 @@ function evalDOM() {
         }, inlineStyle);
         var destroy = "function () {\n        document\n          .querySelector('#" + scriptId + "')\n          .parentElement\n          .remove();\n      }";
         inlineStyle.push("}}\n      " + mediaQuery + " { [" + __ + "] {\n        top: 0%;\n        left: 0%;\n        width: 100%;\n      } }\n\n      @keyframes opacity {\n        0% {\n          opacity: 1;\n        } 50% {\n          opacity: .5;\n        } 100% {\n          opacity: 1;\n        }\n      }\n      " + (injectSelector
-            ? mediaQuery + " {\n        " + injectSelector + " {\n          position: fixed;\n          top: 0;\n          right: 0;\n          bottom: 0;\n          left: 0;\n          z-index: 1000;\n          background: " + background + ";\n        }\n      }"
+            ? mediaQuery + " {\n        " + injectSelector + " {\n          position: fixed;\n          top: 0;\n          right: 0;\n          bottom: 0;\n          left: 0;\n          z-index: " + +args.zIndex + ";\n          background: " + background + ";\n        }\n      }"
             : "") + "\n    </style>\n    <script id='" + scriptId + "'>\n    /**\n     * \u9ED8\u8BA4\u4E8EDOMContentLoaded\u4E8B\u4EF6\u4E2D\u79FB\u9664\u9AA8\u67B6\u5C4F\u76F8\u5173\u4EE3\u7801,\n     * \u5982\u679C\u63D0\u4F9B\u4E86destroy\u53C2\u6570\uFF0C\u5219\u5C06\u4EE5destroy\u547D\u540D\u7684\u51FD\u6570\u6CE8\u5165\u5230window\u4E2D\uFF0C\u4F9B\u7528\u6237\u81EA\u884C\u79FB\u9664\n     */\n\n    " + (destroyFunctionName
             ? "window." + destroyFunctionName + " = " + destroy
             : "window.addEventListener('DOMContentLoaded', " + destroy + ")") + "\n    </script>");
@@ -167,7 +170,7 @@ function evalDOM() {
             body.style.cssText += "overflow:hidden!important;";
             drawBlock({
                 height: 100,
-                zIndex: "990",
+                zIndex: String(+args.zIndex + 1),
                 background: args.background,
                 subClass: true,
             });
@@ -190,7 +193,7 @@ function evalDOM() {
                 height &&
                     drawBlock({
                         height: getPercentage(parseInt(height), innerHeight),
-                        zIndex: "999",
+                        zIndex: String(+args.zIndex + 2),
                         background: background || args.skeletonColor,
                         subClass: true,
                     });
@@ -271,7 +274,7 @@ function evalDOM() {
             return this.showBlocks();
         };
         /**
-         * 过滤重叠部分
+         * Filter overlaps
          */
         DrawPageframe.prototype.filterOverlap = function () {
             var $$ = function (selector) {
@@ -287,13 +290,14 @@ function evalDOM() {
             arr.forEach(function (_a) {
                 var top = _a.top, right = _a.right, bottom = _a.bottom, left = _a.left;
                 var __arr = arr
-                    .slice()
+                    .slice() // copy
                     .filter(function (_a) {
                     var _top = _a.top, _right = _a.right, _bottom = _a.bottom, _left = _a.left;
                     return (top < _top && right > _right && bottom > _bottom && left < _left);
                 });
                 __arr.length && _arr.push.apply(_arr, __arr);
             });
+            // remove
             _arr.forEach(function (_a) {
                 var elem = _a.elem;
                 return elem.remove();

@@ -1,7 +1,7 @@
 /* eslint-disable no-empty-function */
 /* eslint-disable @typescript-eslint/no-empty-function */
 import { Page, EvaluateFn, SerializableOrJSHandle } from 'puppeteer'
-import { SkeletonConfig } from './type'
+import { SkeletonConfig } from './index.d'
 import evalScripts from './evalDOM'
 import { log, getType, Spinner, calcText, parseParams } from './utils'
 
@@ -20,6 +20,7 @@ class Skeleton {
   background: SkeletonConfig['background']
   skeletonColor: SkeletonConfig['skeletonColor']
   animation: SkeletonConfig['animation']
+  zIndex: SkeletonConfig['zIndex']
   rootNode: SkeletonConfig['rootNode']
   header: SkeletonConfig['header']
   device: SkeletonConfig['device']
@@ -40,6 +41,7 @@ class Skeleton {
       background = `#ecf0f2`,
       skeletonColor = `#eee`,
       animation = ``,
+      zIndex = `999`,
       rootNode = ``,
       header = ``,
       device = `iPhone 6`,
@@ -65,6 +67,7 @@ class Skeleton {
     this.background = background
     this.skeletonColor = skeletonColor
     this.animation = animation
+    this.zIndex = zIndex
     this.rootNode = rootNode
     this.header = header
     this.device = device
@@ -115,6 +118,7 @@ class Skeleton {
         background,
         skeletonColor,
         animation,
+        zIndex,
         rootNode,
         header,
         injectSelector,
@@ -143,6 +147,10 @@ class Skeleton {
         animation: {
           type: 'string',
           value: animation,
+        },
+        zIndex: {
+          type: 'string',
+          value: zIndex,
         },
         rootNode: {
           type: 'string',

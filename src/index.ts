@@ -1,13 +1,11 @@
-import { SkeletonConfig } from './type'
+import { SkeletonConfig } from './index.d'
 import Skeleton from './skeleton'
 
 /**
  * generate skeleton screen code
  * @param {{}[]} configs
  */
-export default async function writeSkeleton(
-  configs: SkeletonConfig[]
-): Promise<void> {
+export = async function skeleton(configs: SkeletonConfig[]): Promise<void> {
   if (!Array.isArray(configs)) {
     throw new Error(`\`skeleton.config.js\` must export an array.`)
   }

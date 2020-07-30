@@ -38,13 +38,8 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
-Object.defineProperty(exports, "__esModule", { value: true });
 var skeleton_1 = __importDefault(require("./skeleton"));
-/**
- * generate skeleton screen code
- * @param {{}[]} configs
- */
-function writeSkeleton(configs) {
+module.exports = function skeleton(configs) {
     return __awaiter(this, void 0, void 0, function () {
         var _i, configs_1, config;
         return __generator(this, function (_a) {
@@ -71,5 +66,4 @@ function writeSkeleton(configs) {
             }
         });
     });
-}
-exports.default = writeSkeleton;
+};

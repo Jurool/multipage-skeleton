@@ -49,7 +49,7 @@ var default_html_1 = __importDefault(require("./default.html"));
 var currentDirectory = process.cwd();
 var Skeleton = /** @class */ (function () {
     function Skeleton(_a) {
-        var _b = _a === void 0 ? {} : _a, url = _b.url, output = _b.output, _c = _b.background, background = _c === void 0 ? "#ecf0f2" : _c, _d = _b.skeletonColor, skeletonColor = _d === void 0 ? "#eee" : _d, _e = _b.animation, animation = _e === void 0 ? "" : _e, _f = _b.rootNode, rootNode = _f === void 0 ? "" : _f, _g = _b.header, header = _g === void 0 ? "" : _g, _h = _b.device, device = _h === void 0 ? "iPhone 6" : _h, _j = _b.destroy, destroy = _j === void 0 ? "" : _j, _k = _b.mediaQuery, mediaQuery = _k === void 0 ? "" : _k, _l = _b.userAgent, userAgent = _l === void 0 ? "" : _l, _m = _b.viewport, viewport = _m === void 0 ? "" : _m, headless = _b.headless, extraHTTPHeaders = _b.extraHTTPHeaders, writePageStructure = _b.writePageStructure, includeElement = _b.includeElement, init = _b.init;
+        var _b = _a === void 0 ? {} : _a, url = _b.url, output = _b.output, _c = _b.background, background = _c === void 0 ? "#ecf0f2" : _c, _d = _b.skeletonColor, skeletonColor = _d === void 0 ? "#eee" : _d, _e = _b.animation, animation = _e === void 0 ? "" : _e, _f = _b.zIndex, zIndex = _f === void 0 ? "999" : _f, _g = _b.rootNode, rootNode = _g === void 0 ? "" : _g, _h = _b.header, header = _h === void 0 ? "" : _h, _j = _b.device, device = _j === void 0 ? "iPhone 6" : _j, _k = _b.destroy, destroy = _k === void 0 ? "" : _k, _l = _b.mediaQuery, mediaQuery = _l === void 0 ? "" : _l, _m = _b.userAgent, userAgent = _m === void 0 ? "" : _m, _o = _b.viewport, viewport = _o === void 0 ? "" : _o, headless = _b.headless, extraHTTPHeaders = _b.extraHTTPHeaders, writePageStructure = _b.writePageStructure, includeElement = _b.includeElement, init = _b.init;
         var filepath = !(output === null || output === void 0 ? void 0 : output.filepath) || path_1.default.isAbsolute(output === null || output === void 0 ? void 0 : output.filepath)
             ? output === null || output === void 0 ? void 0 : output.filepath : path_1.default.join(currentDirectory, output === null || output === void 0 ? void 0 : output.filepath);
         this.url = url;
@@ -58,6 +58,7 @@ var Skeleton = /** @class */ (function () {
         this.background = background;
         this.skeletonColor = skeletonColor;
         this.animation = animation;
+        this.zIndex = zIndex;
         this.rootNode = rootNode;
         this.header = header;
         this.device = device;
@@ -94,7 +95,7 @@ var Skeleton = /** @class */ (function () {
     }
     Skeleton.prototype.generateSkeletonHTML = function (page) {
         return __awaiter(this, void 0, void 0, function () {
-            var html, _a, init, includeElement, background, skeletonColor, animation, rootNode, header, injectSelector, mediaQuery, device, destroy, args, _html, e_1;
+            var html, _a, init, includeElement, background, skeletonColor, animation, zIndex, rootNode, header, injectSelector, mediaQuery, device, destroy, args, _html, e_1;
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
@@ -102,7 +103,7 @@ var Skeleton = /** @class */ (function () {
                         _b.label = 1;
                     case 1:
                         _b.trys.push([1, 3, , 4]);
-                        _a = this, init = _a.init, includeElement = _a.includeElement, background = _a.background, skeletonColor = _a.skeletonColor, animation = _a.animation, rootNode = _a.rootNode, header = _a.header, injectSelector = _a.injectSelector, mediaQuery = _a.mediaQuery, device = _a.device, destroy = _a.destroy;
+                        _a = this, init = _a.init, includeElement = _a.includeElement, background = _a.background, skeletonColor = _a.skeletonColor, animation = _a.animation, zIndex = _a.zIndex, rootNode = _a.rootNode, header = _a.header, injectSelector = _a.injectSelector, mediaQuery = _a.mediaQuery, device = _a.device, destroy = _a.destroy;
                         args = utils_1.parseParams.create({
                             init: {
                                 type: 'function',
@@ -123,6 +124,10 @@ var Skeleton = /** @class */ (function () {
                             animation: {
                                 type: 'string',
                                 value: animation,
+                            },
+                            zIndex: {
+                                type: 'string',
+                                value: zIndex,
                             },
                             rootNode: {
                                 type: 'string',

@@ -1,26 +1,26 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import { Devices, SkeletonConfig } from './type'
+import { SkeletonConfig } from './index.d'
 import puppeteer from 'puppeteer'
 
 const { devices } = puppeteer
 import { log, getType } from './utils'
 
-const _devices_: Devices = {
-  mobile: [
-    375,
-    667,
-    'Mozilla/5.0 (iPhone; CPU iPhone OS 11_0 like Mac OS X) AppleWebKit/604.1.38 (KHTML, like Gecko) Version/11.0 Mobile/15A372 Safari/604.1',
-  ],
-  ipad: [
-    1024,
-    1366,
-    'Mozilla/5.0 (iPad; CPU OS 11_0 like Mac OS X) AppleWebKit/604.1.34 (KHTML, like Gecko) Version/11.0 Mobile/15A5341f Safari/604.1',
-  ],
-  pc: [
-    1440,
-    1300,
-    'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.89 Safari/537.36',
-  ],
+const extraDefaultDevices = {
+  mobile: {
+    viewport: { width: 375, height: 667 },
+    userAgent:
+      'Mozilla/5.0 (iPhone; CPU iPhone OS 11_0 like Mac OS X) AppleWebKit/604.1.38 (KHTML, like Gecko) Version/11.0 Mobile/15A372 Safari/604.1',
+  },
+  ipad: {
+    viewport: { width: 1024, height: 1366 },
+    userAgent:
+      'Mozilla/5.0 (iPad; CPU OS 11_0 like Mac OS X) AppleWebKit/604.1.34 (KHTML, like Gecko) Version/11.0 Mobile/15A5341f Safari/604.1',
+  },
+  pc: {
+    viewport: { width: 1440, height: 1300 },
+    userAgent:
+      'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.89 Safari/537.36',
+  },
 }
 
 export default async (
@@ -41,20 +41,25 @@ export default async (
 ) => {
   const browser = await puppeteer.launch({
     headless,
+    ...(headless ? {} : { args: ['--no-sandbox'] }),
   })
 
   async function openPage(url: string, extraHTTPHeaders?: string) {
     const page = await browser.newPage()
 
     try {
-      const defaultDevices = [`mobile`, `ipad`, `pc`]
+      const defaultDevices = Object.keys(extraDefaultDevices)
       if (userAgent && viewport) {
         page.setUserAgent(userAgent)
         page.setViewport(viewport)
-      } else if (defaultDevices.includes(device as string)) {
-        const deviceSet = _devices_[device as keyof Devices]
-        page.setUserAgent(deviceSet[2])
-        page.setViewport({ width: deviceSet[0], height: deviceSet[1] })
+      } else if (device && defaultDevices.includes(device)) {
+        const {
+          userAgent: _userAgent,
+          viewport: _viewport,
+        } = extraDefaultDevices[device as keyof typeof extraDefaultDevices]
+
+        page.setUserAgent(_userAgent)
+        page.setViewport(_viewport)
       } else if (typeof device === `string`) {
         const _device = devices[device]
         await page.emulate(_device)

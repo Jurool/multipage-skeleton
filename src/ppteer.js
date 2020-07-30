@@ -1,4 +1,15 @@
 "use strict";
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -42,70 +53,67 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var puppeteer_1 = __importDefault(require("puppeteer"));
 var devices = puppeteer_1.default.devices;
 var utils_1 = require("./utils");
-var _devices_ = {
-    mobile: [
-        375,
-        667,
-        'Mozilla/5.0 (iPhone; CPU iPhone OS 11_0 like Mac OS X) AppleWebKit/604.1.38 (KHTML, like Gecko) Version/11.0 Mobile/15A372 Safari/604.1',
-    ],
-    ipad: [
-        1024,
-        1366,
-        'Mozilla/5.0 (iPad; CPU OS 11_0 like Mac OS X) AppleWebKit/604.1.34 (KHTML, like Gecko) Version/11.0 Mobile/15A5341f Safari/604.1',
-    ],
-    pc: [
-        1440,
-        1300,
-        'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.89 Safari/537.36',
-    ],
+var extraDefaultDevices = {
+    mobile: {
+        viewport: { width: 375, height: 667 },
+        userAgent: 'Mozilla/5.0 (iPhone; CPU iPhone OS 11_0 like Mac OS X) AppleWebKit/604.1.38 (KHTML, like Gecko) Version/11.0 Mobile/15A372 Safari/604.1',
+    },
+    ipad: {
+        viewport: { width: 1024, height: 1366 },
+        userAgent: 'Mozilla/5.0 (iPad; CPU OS 11_0 like Mac OS X) AppleWebKit/604.1.34 (KHTML, like Gecko) Version/11.0 Mobile/15A5341f Safari/604.1',
+    },
+    pc: {
+        viewport: { width: 1440, height: 1300 },
+        userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.89 Safari/537.36',
+    },
 };
 exports.default = (function (_a) {
     var _b = _a === void 0 ? {} : _a, device = _b.device, _c = _b.headless, headless = _c === void 0 ? true : _c, userAgent = _b.userAgent, viewport = _b.viewport;
     return __awaiter(void 0, void 0, void 0, function () {
         function openPage(url, extraHTTPHeaders) {
             return __awaiter(this, void 0, void 0, function () {
-                var page, defaultDevices, deviceSet, _device, e_1;
-                return __generator(this, function (_a) {
-                    switch (_a.label) {
+                var page, defaultDevices, _a, _userAgent, _viewport, _device, e_1;
+                return __generator(this, function (_b) {
+                    switch (_b.label) {
                         case 0: return [4 /*yield*/, browser.newPage()];
                         case 1:
-                            page = _a.sent();
-                            _a.label = 2;
+                            page = _b.sent();
+                            _b.label = 2;
                         case 2:
-                            _a.trys.push([2, 10, , 11]);
-                            defaultDevices = ["mobile", "ipad", "pc"];
+                            _b.trys.push([2, 10, , 11]);
+                            defaultDevices = Object.keys(extraDefaultDevices);
                             if (!(userAgent && viewport)) return [3 /*break*/, 3];
                             page.setUserAgent(userAgent);
                             page.setViewport(viewport);
                             return [3 /*break*/, 6];
                         case 3:
-                            if (!defaultDevices.includes(device)) return [3 /*break*/, 4];
-                            deviceSet = _devices_[device];
-                            page.setUserAgent(deviceSet[2]);
-                            page.setViewport({ width: deviceSet[0], height: deviceSet[1] });
+                            if (!(device && defaultDevices.includes(device))) return [3 /*break*/, 4];
+                            _a = extraDefaultDevices[device], _userAgent = _a.userAgent, _viewport = _a.viewport;
+                            page.setUserAgent(_userAgent);
+                            page.setViewport(_viewport);
                             return [3 /*break*/, 6];
                         case 4:
                             if (!(typeof device === "string")) return [3 /*break*/, 6];
                             _device = devices[device];
                             return [4 /*yield*/, page.emulate(_device)];
                         case 5:
-                            _a.sent();
-                            _a.label = 6;
+                            _b.sent();
+                            _b.label = 6;
                         case 6:
                             if (!(extraHTTPHeaders && utils_1.getType(extraHTTPHeaders) === "object")) return [3 /*break*/, 8];
                             return [4 /*yield*/, page.setExtraHTTPHeaders(new Map(Object.entries(extraHTTPHeaders)))];
                         case 7:
-                            _a.sent();
-                            _a.label = 8;
+                            _b.sent();
+                            _b.label = 8;
                         case 8: return [4 /*yield*/, page.goto(url, {
                                 timeout: 2 * 60 * 1000,
                                 waitUntil: "networkidle0",
                             })];
                         case 9:
-                            _a.sent();
+                            _b.sent();
                             return [3 /*break*/, 11];
                         case 10:
-                            e_1 = _a.sent();
+                            e_1 = _b.sent();
                             console.log("\n", "error: ");
                             utils_1.log.error(e_1.message);
                             return [3 /*break*/, 11];
@@ -117,9 +125,7 @@ exports.default = (function (_a) {
         var browser;
         return __generator(this, function (_d) {
             switch (_d.label) {
-                case 0: return [4 /*yield*/, puppeteer_1.default.launch({
-                        headless: headless,
-                    })];
+                case 0: return [4 /*yield*/, puppeteer_1.default.launch(__assign({ headless: headless }, (headless ? {} : { args: ['--no-sandbox'] })))];
                 case 1:
                     browser = _d.sent();
                     return [2 /*return*/, {

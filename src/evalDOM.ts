@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/ban-types */
-import { ClassProps, Attr } from './type'
+import { ClassProps, Attr } from './evalDOM.d'
 
 export default function evalDOM(
   ...params: unknown[]
@@ -30,6 +30,7 @@ export default function evalDOM(
     'video',
     'xmp',
   ]
+  //** Used to save the skeleton screen code */
   const blocks: string[] = []
   const { innerWidth, innerHeight } = window
 
@@ -37,15 +38,17 @@ export default function evalDOM(
   if (!args.length) args = [{}]
   const [firstElem] = args
 
+  // parse arguments
   if (args.length !== 1 || getType(firstElem) !== 'object') {
     args = parseParams(args)
   }
 
+  // Skeleton screen DOM attributes
   const [_, __] = [`skeleton-${random()}`, `skeleton-${random()}`]
 
   const classProps: ClassProps = {
     position: 'fixed',
-    zIndex: `999`,
+    zIndex: args.zIndex,
     background: args.skeletonColor,
   }
   if (args.animation) {
@@ -59,7 +62,7 @@ export default function evalDOM(
     height,
     top,
     left,
-    zIndex = `999`,
+    zIndex = String(+args.zIndex + 2),
     background = args.skeletonColor,
     radius,
     subClass,
@@ -209,7 +212,7 @@ export default function evalDOM(
           right: 0;
           bottom: 0;
           left: 0;
-          z-index: 1000;
+          z-index: ${+args.zIndex};
           background: ${background};
         }
       }`
@@ -289,7 +292,7 @@ export default function evalDOM(
 
       drawBlock({
         height: 100,
-        zIndex: `990`,
+        zIndex: String(+args.zIndex + 1),
         background: args.background,
         subClass: true,
       })
@@ -320,7 +323,7 @@ export default function evalDOM(
         height &&
           drawBlock({
             height: getPercentage(parseInt(height), innerHeight),
-            zIndex: `999`,
+            zIndex: String(+args.zIndex + 2),
             background: background || args.skeletonColor,
             subClass: true,
           })
@@ -436,7 +439,7 @@ export default function evalDOM(
     }
 
     /**
-     * 过滤重叠部分
+     * Filter overlaps
      */
     filterOverlap() {
       const $$ = (selector: string) =>
@@ -448,10 +451,12 @@ export default function evalDOM(
           const { top, right, bottom, left } = elem.getBoundingClientRect()
           return { top, right, bottom, left, elem }
         })
+
       const _arr: typeof arr = []
+
       arr.forEach(({ top, right, bottom, left }) => {
         const __arr = arr
-          .slice()
+          .slice() // copy
           .filter(
             ({ top: _top, right: _right, bottom: _bottom, left: _left }) => {
               return (
@@ -462,6 +467,7 @@ export default function evalDOM(
         __arr.length && _arr.push(...__arr)
       })
 
+      // remove
       _arr.forEach(({ elem }) => elem.remove())
     }
   }

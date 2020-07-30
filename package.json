@@ -1,9 +1,10 @@
 {
   "name": "multipage-skeleton",
   "description": "A tool to automatically generate skeleton screen code.",
-  "version": "1.2.2",
+  "version": "1.3.3",
   "license": "MIT",
   "main": "src/index.js",
+  "types": "src/index.d.ts",
   "author": "lucifer_zl",
   "keywords": [
     "multipage skeleton",
@@ -24,8 +25,7 @@
   },
   "scripts": {
     "build": "npx tsc --build -w tsconfig.json",
-    "test": "node ./examples/index",
-    "test2": "node ./bin/skeleton-cli.js start"
+    "test": "node ./examples/index"
   },
   "dependencies": {
     "chalk": "^4.1.0",

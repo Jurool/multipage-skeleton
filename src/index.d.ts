@@ -46,6 +46,13 @@ export interface SkeletonConfig {
   animation?: string
 
   /**
+   * skeleton code z-index
+   * @default
+   * 999
+   */
+  zIndex?: string | number
+
+  /**
    * Generate a skeleton screen for a module
    * @deprecated
    */
@@ -85,47 +92,4 @@ export interface SkeletonConfig {
   viewport?: Viewport | ``
 }
 
-export interface ClassProps {
-  position: string
-  zIndex: string
-  background: string
-  animation?: string
-}
-
-export interface Attr {
-  width?: string | number
-  height?: string | number
-  top?: string
-  left?: string
-  zIndex?: string
-  background?: string
-  radius?: string
-  subClass?: boolean
-}
-
-type _Devices_ = `mobile` | `ipad` | `pc`
-
-/**
- * In addition, three additional configurations of different sizes are provided
- * (it currently does not support configurations, and will be supported in the future)
-```js
-   {
-      mobile: [
-        375,
-        667,
-        'Mozilla/5.0 (iPhone; CPU iPhone OS 11_0 like Mac OS X) AppleWebKit/604.1.38 (KHTML, like Gecko) Version/11.0 Mobile/15A372 Safari/604.1',
-      ],
-      ipad: [
-        1024,
-        1366,
-        'Mozilla/5.0 (iPad; CPU OS 11_0 like Mac OS X) AppleWebKit/604.1.34 (KHTML, like Gecko) Version/11.0 Mobile/15A5341f Safari/604.1',
-      ],
-      pc: [
-        1440,
-        1300,
-        'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.89 Safari/537.36',
-      ],
-    }
-```
- */
-export type Devices = Record<_Devices_, [number, number, string]>
+export default function skeleton(configs: SkeletonConfig[]): Promise<void>
