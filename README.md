@@ -12,8 +12,12 @@ yarn add multipage-skeleton -D
 npm i multipage-skeleton -D
 ```
 
+or
+
 ```
-npx skeleton start
+yarn global add multipage-skeleton
+// or
+npm i multipage-skeleton -g
 ```
 
 ### via skeleton.config.js
@@ -76,6 +80,15 @@ module.exports = [
 ]
 ```
 
+then
+
+```
+npx skeleton start
+
+// If you installed it globally
+skeleton start
+```
+
 ### or
 
 ```js
@@ -88,7 +101,7 @@ skeleton(parameter)
 
 The parameter of the skeleton screen are like skeleton.config.js.
 
-Detailed configuration can refer to [type.ts](./src/type.ts)
+Detailed configuration can refer to [index.d.ts](./src/index.d.ts)
 
 # Tip
 
