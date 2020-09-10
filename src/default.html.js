@@ -1,3 +1,29 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.default = "\n<!DOCTYPE html>\n<html lang=\"en\">\n  <head>\n    <meta charset=\"utf-8\">\n    <meta name=\"viewport\" content=\"width=device-width,initial-scale=1.0\">\n    <title>example</title>\n    <style>\n      @keyframes opacity {\n        0% {\n          opacity: 1\n        }\n        50% {\n          opacity: .5\n        }\n        100% {\n          opacity: 1\n        }\n      }\n    </style>\n  </head>\n  <body>\n    <div id=\"app\"></div>\n    <!-- built files will be auto injected -->\n  </body>\n</html>\n";
+exports.default = `
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>example</title>
+    <style>
+      @keyframes opacity {
+        0% {
+          opacity: 1
+        }
+        50% {
+          opacity: .5
+        }
+        100% {
+          opacity: 1
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="app"></div>
+    <!-- built files will be auto injected -->
+  </body>
+</html>
+`;

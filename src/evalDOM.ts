@@ -182,10 +182,14 @@ export default function evalDOM(
     }, inlineStyle)
 
     const destroy = `function () {
-        document
+        var parentElement = document
           .querySelector('#${scriptId}')
-          .parentElement
-          .remove();
+          .parentElement;
+        try {
+          parentElement.remove();
+        } catch (error) {
+          parentElement.parentElement.removeChild(parentElement);
+        }
       }`
     inlineStyle.push(`}}
       ${mediaQuery} { [${__}] {
