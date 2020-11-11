@@ -167,13 +167,15 @@ export default function evalDOM(
 
   function createCommonClass(props: ClassProps) {
     const scriptId = `SkeletonScirpt-${random()}`
-    const inlineStyle = [`<style> ${args.mediaQuery} { [${_}] {`]
     const {
       mediaQuery,
       injectSelector,
       destroy: destroyFunctionName,
       background,
     } = args
+    const inlineStyle = [
+      `<style> ${mediaQuery ? `${mediaQuery} {` : ``} [${_}] {`,
+    ]
 
     Object.entries(props).reduce((arr, [key, value]) => {
       arr.push(`${kebabCase(key) as any}: ${value};\n`)
@@ -191,12 +193,20 @@ export default function evalDOM(
           parentElement.parentElement.removeChild(parentElement);
         }
       }`
-    inlineStyle.push(`}}
-      ${mediaQuery} { [${__}] {
+    inlineStyle.push(`}
+      ${
+        mediaQuery
+          ? `} ${mediaQuery} { [${__}] {
         top: 0%;
         left: 0%;
         width: 100%;
-      } }
+      } }`
+          : `[${__}] {
+        top: 0%;
+        left: 0%;
+        width: 100%;
+      }`
+      }
 
       @keyframes opacity {
         0% {
@@ -209,7 +219,7 @@ export default function evalDOM(
       }
       ${
         injectSelector
-          ? `${mediaQuery} {
+          ? `${mediaQuery ? `${mediaQuery} {` : ``}
         ${injectSelector} {
           position: fixed;
           top: 0;
@@ -219,7 +229,7 @@ export default function evalDOM(
           z-index: ${+args.zIndex};
           background: ${background};
         }
-      }`
+      ${mediaQuery ? `}` : ``}`
           : ``
       }
     </style>

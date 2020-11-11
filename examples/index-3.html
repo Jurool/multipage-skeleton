@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    .tips {
+      display: flex;
+      width: 100vw;
+      height: 100vh;
+      font-size: 30px;
+    }
+
+    .tips div {
+      width: 500px;
+      margin: auto;
+      text-align: center;
+      line-height: 2;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="tips">
+    <div>The screen skeleton code of the current page has been destroyed after the DOMContentLoaded event</div>
+  </div>
+  <div class="test-wrapper-m-2">
+    <style>
+      [skeleton-353269ceaaa8] {
+        position: fixed;
+        z-index: 999;
+        background: #eee;
+        animation: opacity 1.5s linear infinite;
+        ;
+      }
+
+      [skeleton-a6b5d20f62825] {
+        top: 0%;
+        left: 0%;
+        width: 100%;
+      }
+
+      @keyframes opacity {
+        0% {
+          opacity: 1;
+        }
+
+        50% {
+          opacity: .5;
+        }
+
+        100% {
+          opacity: 1;
+        }
+      }
+
+      .test-wrapper-m-2 {
+        position: fixed;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        z-index: 999;
+        background: #fff;
+      }
+    </style>
+    <script id="SkeletonScirpt-411557a5254b1">
+      /**     * 默认于DOMContentLoaded事件中移除骨架屏相关代码,     * 如果提供了destroy参数，则将以destroy命名的函数注入到window中，供用户自行移除     */
+      window.addEventListener('DOMContentLoaded', function () {
+        var parentElement = document.querySelector('#SkeletonScirpt-411557a5254b1').parentElement;
+        try {
+          parentElement.remove();
+        } catch (error) {
+          parentElement.parentElement.removeChild(parentElement);
+        }
+      })
+    </script>
+    <div skeleton-353269ceaaa8 skeleton-a6b5d20f62825 style="height: 100%;z-index: 1000;background: #fff"></div>
+    <div skeleton-353269ceaaa8 style="height: 2.399%;top: 2.399%;left: 90.933%;width: 4.267%;z-index: 1001"></div>
+    <div skeleton-353269ceaaa8 style="height: 8.546%;top: 9.145%;left: 21.067%;width: 57.867%;z-index: 1001"></div>
+    <div skeleton-353269ceaaa8 style="height: 6.897%;top: 22.189%;left: 4.267%;width: 91.467%;z-index: 1001"></div>
+    <div skeleton-353269ceaaa8 style="height: 15.142%;top: 32.084%;left: 4.267%;width: 91.467%;z-index: 1001"></div>
+    <div skeleton-353269ceaaa8 style="height: 3.448%;top: 2.549%;left: 4.533%;width: 6.133%;z-index: 1001"></div>
+    <div skeleton-353269ceaaa8 style="height: 3.598%;top: 50.874%;left: 4.267%;width: 91.467%;z-index: 1001"></div>
+    <div skeleton-353269ceaaa8 style="height: 2.549%;top: 54.622%;left: 4.267%;width: 6.933%;z-index: 1001"></div>
+    <div skeleton-353269ceaaa8 style="height: 2.549%;top: 54.622%;left: 13.333%;width: 10.400%;z-index: 1001"></div>
+    <div skeleton-353269ceaaa8 style="height: 3.598%;top: 58.337%;left: 4.267%;width: 91.467%;z-index: 1001"></div>
+    <div skeleton-353269ceaaa8 style="height: 2.549%;top: 62.085%;left: 4.267%;width: 6.933%;z-index: 1001"></div>
+    <div skeleton-353269ceaaa8 style="height: 2.549%;top: 62.085%;left: 13.333%;width: 10.400%;z-index: 1001"></div>
+    <div skeleton-353269ceaaa8 style="height: 3.598%;top: 65.801%;left: 4.267%;width: 91.467%;z-index: 1001"></div>
+    <div skeleton-353269ceaaa8 style="height: 2.549%;top: 69.549%;left: 4.267%;width: 17.333%;z-index: 1001"></div>
+    <div skeleton-353269ceaaa8 style="height: 7.496%;top: 75.623%;left: 4.267%;width: 91.467%;z-index: 1001"></div>
+    <div skeleton-353269ceaaa8 style="height: 11.308%;top: 83.719%;left: 4.267%;width: 30.279%;z-index: 1001"></div>
+    <div skeleton-353269ceaaa8 style="height: 11.308%;top: 83.719%;left: 34.813%;width: 30.279%;z-index: 1001"></div>
+    <div skeleton-353269ceaaa8 style="height: 11.308%;top: 83.719%;left: 65.358%;width: 30.279%;z-index: 1001"></div>
+    <div skeleton-353269ceaaa8 style="height: 2.549%;top: 96.526%;left: 4.267%;width: 13.867%;z-index: 1001"></div>
+    <div skeleton-353269ceaaa8 style="height: 5.697%;top: 94.727%;left: 86.133%;width: 9.600%;z-index: 1001"></div>
+  </div>
+</body>
+
+</html>
